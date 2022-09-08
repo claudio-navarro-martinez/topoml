@@ -3,44 +3,64 @@ package pgdb
 import (
 	"time"
 
-	"github.com/go-pg/pg/v10"
-	"github.com/go-pg/pg/v10/orm"
+	"gorm.io/gorm"
 )
 
 type Pipeline struct {
-	Datasetname string
-	Dockerimage string
-	Dockerversion string
-	Secretname string
-	Format string
-	Query string
-	HasHeader bool
-	Crontab time.Time
-	Pipelinename string
-	Output string
-	Cloudname string
+	PipelineId 		string   	`gorm:"primaryKey"`
+	DatasetId		string 		
+	RegistryId		string
+	ImageId			string
+	SecretName 		string			
+	Format 			string			
+	Query 			string			
+	HasHeader 		bool			
+	Crontab 		time.Time		
+	Output 			string			
+	Cloudname 		string			
 }
 
-func (p *Pipeline) Insert(db *pg.DB) {
-	_, err := db.Model(p).Insert()
-	if err != nil {
-		panic(err)
+type Image struct {
+	ImageId 		string		`gorm:"primaryKey"`
+	Name 			string
+	Version 		string
+	Registry 		string
+}
+
+type Dataset struct {
+	DatasetId 		string		`gorm:"primaryKey"`
+	Local 			bool
+	Path 			string
+	Key 			string
+}
+
+type Registry struct {
+	RegistryId		string		`gorm:"primaryKey"`
+	Name 			string
+	User 			string
+	Password 		string
+	Key 			string
+}
+
+func (p *Pipeline) Insert(db *gorm.DB) {
+	err := db.Create(p)
+	if err.Error != nil {
+		panic(err.Error)
 	}
 }
 
-// createSchema creates database schema for User and Story models.
-func (p *Pipeline) CreateSchema(db *pg.DB) error {
-    models := []interface{}{
-        (*Pipeline)(nil),
-    }
-
-    for _, model := range models {
-        err := db.Model(model).CreateTable(&orm.CreateTableOptions{})          
-        
-        if err != nil {
-            return err
-        }
-		
-    }
-    return nil
+func (r *Registry) Insert(db *gorm.DB) {
+	err := db.Create(r)
+	if err.Error != nil {
+		panic(err.Error)
+	}
 }
+
+func (i *Image) Insert(db *gorm.DB) {
+	err := db.Create(i)
+	if err.Error != nil {
+		panic(err.Error)
+	}
+}
+
+

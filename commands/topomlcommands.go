@@ -1,12 +1,11 @@
 package commands
 
 import (
-	"fmt"
 	"log"
 	"time"
 
 	"github.com/claudio-navarro-martinez/topoml/pgdb"
-	pg "github.com/go-pg/pg/v10"
+	"gorm.io/gorm"
 
 	"github.com/claudio-navarro-martinez/topoml/azureutils"
 	"github.com/spf13/cobra"
@@ -43,34 +42,41 @@ var pipelinecmd = &cobra.Command{
 	Short: "create pipelines, ml algo and other things to come",
 	Long: `create pipelines, ml algo and other things to come`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("estamos en create pipeline")
-		conn := pgdb.Connect()
 		
-		pipe1 := &pgdb.Pipeline {
-			Datasetname: "file1",
-			Dockerimage: "linearregresion1",
-			Dockerversion: "1.0",
-			Secretname: "no te lo digo",
+		conn := pgdb.Connect()
+
+		r1 := &pgdb.Registry{
+			RegistryId: "dockerhub5",
+		}
+		i1 := &pgdb.Image{ImageId: "image5"}
+		p1 := &pgdb.Pipeline {
+			SecretName: "no te lo digo",
 			Crontab: time.Now(),
-			Pipelinename : "pipe 1",
+			PipelineId : "pipe 5",
 			Output: "fichero.salida",
 			Cloudname: "azure",
+			RegistryId: r1.RegistryId,
+			ImageId: i1.ImageId,
 		}
-		SavePipeline(conn, pipe1)
-
+		SavePipeline(conn,p1,r1,i1)
+		
 	},
 }
 
-func SavePipeline(c *pg.DB, p *pgdb.Pipeline) {
-	// p.CreateSchema(c)
-	p.Insert(c)
+func SavePipeline(db *gorm.DB, p *pgdb.Pipeline, r *pgdb.Registry, i *pgdb.Image) {
+	// AutoMigrate creates the table associated to the corresponding struct
+	// db.AutoMigrate(p)
+	// db.AutoMigrate(r)
+	// db.AutoMigrate(i)
+	p.Insert(db)
+	r.Insert(db)
+	i.Insert(db)
 }
 
 func init() {
 	rootCmd.AddCommand(listFileAzure)
 	rootCmd.AddCommand(createcmd)
 	createcmd.AddCommand(pipelinecmd)
-
 }
 
 func Execute() {

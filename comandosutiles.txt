@@ -1,0 +1,13 @@
+az login
+az account show --output table
+az account set --subscription 82896477-337e-476d-8add-735ce69fdf4b
+az account list --output table
+az aks get-credentials --resource-group databricksresourcegroup --name AKSCNM
+
+kubectl apply -f https://kubernetes.io/examples/controllers/frontend.yaml
+kubectl get pods
+kubectl get namespaces
+
+psql -h 172.17.0.2 -U postgres
+\l    ## list databases
+\dt   ## list tables in currentdb
