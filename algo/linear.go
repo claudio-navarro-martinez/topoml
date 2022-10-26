@@ -18,7 +18,7 @@ const (
 	host     = "20.50.138.179"
 	port     = 5432
 	user     = "postgres"
-	password = "austral1a"
+	password = "xxxxx"
 	dbname   = "mlearning"
 )
 
