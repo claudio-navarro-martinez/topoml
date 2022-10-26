@@ -151,7 +151,7 @@ func UploadBytesToBlob(b []byte) (string, error) {
 }
 
 func GetAccountInfo() (string, string, string, string) {
-	azrKey := "RRoeza9OpegzrmCyZL26UxxaECxQ5Di6KrwGzCiy06YzIV7cZDTlylV8ifweQglXbNXwjdCdD8HN4+ASt8YLM+A=="
+	azrKey := "+ASt8YLM+A=="
 	azrBlobAccountName := "storageaccountopoml"
 	azrPrimaryBlobServiceEndpoint := fmt.Sprintf("https://%s.blob.core.windows.net/", azrBlobAccountName)
 	azrBlobContainer := "containertopoml"
